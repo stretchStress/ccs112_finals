@@ -20,14 +20,14 @@ function EmployeeDashboard() {
     }, [user, navigate]);
 
     const fetchProducts = () => {
-    axios.get('http://localhost:8000/api/employee/products')
+    axios.get('http://127.0.0.1:8000/api/employee/products')
         .then(response => {
         setProducts(response.data);
         });
     };
 
     const handleAddProduct = () => {
-    axios.post('http://localhost:8000/api/employee/products', {
+    axios.post('http://127.0.0.1:8000/api/employee/products', {
         name,
         price,
         stock,
@@ -40,7 +40,7 @@ function EmployeeDashboard() {
     };
 
     const handleDelete = (productId) => {
-    axios.delete(`http://localhost:8000/api/employee/products/${productId}`)
+    axios.delete(`http://127.0.0.1:8000/api/employee/products/${productId}`)
         .then(() => fetchProducts());
     };
 
