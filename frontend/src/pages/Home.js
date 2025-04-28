@@ -6,10 +6,19 @@ function Home() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/store/products')
-      .then(response => {
-        setProducts(response.data);
-      });
+    const token = localStorage.getItem('auth_token');  
+
+    axios.get('http://127.0.0.1:8000/api/products', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      setProducts(response.data);
+    })
+    .catch(error => {
+      console.error("There was an error fetching the products!", error);
+    });
   }, []);
 
   return (
@@ -30,7 +39,7 @@ function Home() {
         ))}
         </div>
     </div>
-    );
+  );
 }
 
 export default Home;
