@@ -4,71 +4,71 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 function EmployeeDashboard() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [stock, setStock] = useState('');
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const [products, setProducts] = useState([]);
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const [stock, setStock] = useState('');
 
-  useEffect(() => {
+    useEffect(() => {
     if (!user || user.role !== 'employee') {
-      navigate('/login');
+        navigate('/login');
     } else {
-      fetchProducts();
+        fetchProducts();
     }
-  }, [user, navigate]);
+    }, [user, navigate]);
 
-  const fetchProducts = () => {
+    const fetchProducts = () => {
     axios.get('http://localhost:8000/api/employee/products')
-      .then(response => {
+        .then(response => {
         setProducts(response.data);
-      });
-  };
+        });
+    };
 
-  const handleAddProduct = () => {
+    const handleAddProduct = () => {
     axios.post('http://localhost:8000/api/employee/products', {
-      name,
-      price,
-      stock,
+        name,
+        price,
+        stock,
     }).then(() => {
-      setName('');
-      setPrice('');
-      setStock('');
-      fetchProducts();
+        setName('');
+        setPrice('');
+        setStock('');
+        fetchProducts();
     });
-  };
+    };
 
-  const handleDelete = (productId) => {
+    const handleDelete = (productId) => {
     axios.delete(`http://localhost:8000/api/employee/products/${productId}`)
-      .then(() => fetchProducts());
-  };
+        .then(() => fetchProducts());
+    };
 
-  return (
+    return (
     <div>
-      <h1>Admin Dashboard</h1>
+        <h1>Admin Dashboard</h1>
 
-      <div className="mb-4">
+        <div className="mb-4">
         <h4>Add New Product</h4>
         <input type="text" className="form-control mb-2" placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
         <input type="number" className="form-control mb-2" placeholder="Price" value={price} onChange={e => setPrice(e.target.value)} />
         <input type="number" className="form-control mb-2" placeholder="Stock" value={stock} onChange={e => setStock(e.target.value)} />
         <button className="btn btn-primary" onClick={handleAddProduct}>Add Product</button>
-      </div>
+        </div>
 
-      <h4>Existing Products</h4>
-      <ul className="list-group">
+        <h4>Existing Products</h4>
+        <ul className="list-group">
         {products.map(product => (
-          <li className="list-group-item d-flex justify-content-between" key={product.id}>
+            <li className="list-group-item d-flex justify-content-between" key={product.id}>
             <div>
-              {product.name} - ${product.price} ({product.stock} pcs)
+                {product.name} - ${product.price} ({product.stock} pcs)
             </div>
             <button className="btn btn-danger" onClick={() => handleDelete(product.id)}>Delete</button>
-          </li>
+            </li>
         ))}
-      </ul>
+        </ul>
     </div>
-  );
+    );
 }
 
 export default EmployeeDashboard;

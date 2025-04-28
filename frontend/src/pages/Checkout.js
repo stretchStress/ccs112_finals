@@ -4,51 +4,51 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 function Checkout() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([]);
-  const [address, setAddress] = useState('');
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const [cartItems, setCartItems] = useState([]);
+    const [address, setAddress] = useState('');
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCartItems(storedCart);
-  }, [user, navigate]);
+    useEffect(() => {
+        if (!user) {
+            navigate('/login');
+        }
+        const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+        setCartItems(storedCart);
+    }, [user, navigate]);
 
-  const handleCheckout = async () => {
+    const handleCheckout = async () => {
     try {
-      await axios.post('http://localhost:8000/api/store/checkout', {
+        await axios.post('http://localhost:8000/api/store/checkout', {
         items: cartItems,
         address: address,
-      });
-      localStorage.removeItem('cart');
-      alert('Order placed successfully!');
-      navigate('/');
+        });
+        localStorage.removeItem('cart');
+        alert('Order placed successfully!');
+        navigate('/');
     } catch (error) {
-      console.error(error);
-      alert('Failed to checkout.');
+        console.error(error);
+        alert('Failed to checkout.');
     }
-  };
+    };
 
-  return (
+    return (
     <div>
-      <h1>Checkout</h1>
-      <div className="mb-3">
+        <h1>Checkout</h1>
+        <div className="mb-3">
         <label>Delivery Address</label>
         <input type="text" className="form-control" value={address} onChange={(e) => setAddress(e.target.value)} />
-      </div>
-      <ul className="list-group mb-3">
+        </div>
+        <ul className="list-group mb-3">
         {cartItems.map(item => (
-          <li className="list-group-item" key={item.id}>
+            <li className="list-group-item" key={item.id}>
             {item.name} - ${item.price}
-          </li>
+            </li>
         ))}
-      </ul>
-      <button className="btn btn-success" onClick={handleCheckout}>Place Order</button>
+        </ul>
+        <button className="btn btn-success" onClick={handleCheckout}>Place Order</button>
     </div>
-  );
+    );
 }
 
 export default Checkout;
